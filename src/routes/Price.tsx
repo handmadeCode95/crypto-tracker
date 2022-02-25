@@ -9,6 +9,7 @@ const Overview = styled.div`
   padding: 10px 20px;
   border-radius: 10px;
   margin-bottom: 20px;
+  transition: 0.1s ease-in;
 `;
 
 interface IOverviewItem {
