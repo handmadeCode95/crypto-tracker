@@ -1,12 +1,16 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { useRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
-  max-width: 480px;
+  width: 480px;
   margin: 0 auto;
 `;
 
@@ -16,19 +20,21 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
+  position: relative;
 `;
 
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 10px;
+  transition: 0.1s ease-in;
   a {
     display: flex;
     align-items: center;
-    transition: color 0.2s ease-in;
+    transition: color 0.1s ease-in;
     padding: 20px;
   }
   &:hover {
@@ -41,6 +47,22 @@ const Coin = styled.li`
 const Title = styled.h1`
   font-size: 48px;
   font-weight: 600;
+  transition: 0.1s ease-in;
+`;
+
+const ModeButton = styled.button`
+  position: absolute;
+  top: 15px;
+  right: 0;
+  color: ${(props) => props.theme.textColor};
+  background: none;
+  border: none;
+  border-radius: 50%;
+  transition: 0.1s ease-in;
+  &:hover {
+    color: ${(props) => props.theme.accentColor};
+    cursor: pointer;
+  }
 `;
 
 const Loader = styled.span`
@@ -69,6 +91,8 @@ interface ICoin {
 }
 
 const Coins = () => {
+  const [isDark, setIsDark] = useRecoilState(isDarkAtom);
+  const toggleIsDarkAtom = () => setIsDark((current) => !current);
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
   return (
@@ -79,6 +103,13 @@ const Coins = () => {
       <Header>
         <Img src={`${process.env.PUBLIC_URL}/logo192.png`} size="50px" />
         <Title>React Coins</Title>
+        <ModeButton onClick={toggleIsDarkAtom}>
+          {isDark ? (
+            <FontAwesomeIcon icon={faSun} size="lg" />
+          ) : (
+            <FontAwesomeIcon icon={faMoon} size="lg" />
+          )}
+        </ModeButton>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

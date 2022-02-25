@@ -3,6 +3,8 @@ import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinHistory } from "../api";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Loader = styled.span`
   text-align: center;
@@ -21,6 +23,7 @@ interface IHistoricalData {
 }
 
 function Chart() {
+  const isDark = useRecoilValue(isDarkAtom);
   const coinId = useOutletContext<string>();
   const { isLoading, data } = useQuery<IHistoricalData[]>(
     ["ohlcv", coinId],
@@ -40,10 +43,16 @@ function Chart() {
             {
               data: data?.map((price) => [
                 new Date(price.time_open).getTime(),
-                price.open,
-                price.high,
-                price.low,
-                price.close,
+                price.open > 100
+                  ? price.open.toFixed(0)
+                  : price.open.toFixed(6),
+                price.high > 100
+                  ? price.high.toFixed(0)
+                  : price.high.toFixed(6),
+                price.low > 100 ? price.low.toFixed(0) : price.low.toFixed(6),
+                price.close > 100
+                  ? price.close.toFixed(0)
+                  : price.close.toFixed(6),
               ]),
             },
           ]}
@@ -56,7 +65,7 @@ function Chart() {
                 },
               },
             },
-            theme: { mode: "dark" },
+            theme: { mode: isDark ? "dark" : "light" },
             chart: {
               height: 500,
               width: 500,
@@ -66,7 +75,8 @@ function Chart() {
             yaxis: {
               labels: {
                 show: false,
-                formatter: (value) => value.toFixed(0),
+                formatter: (value) =>
+                  value > 100 ? `$${value.toFixed(0)}` : `$${value.toFixed(6)}`,
               },
               tooltip: {
                 enabled: true,

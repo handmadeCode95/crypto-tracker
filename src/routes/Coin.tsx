@@ -4,10 +4,14 @@ import { useLocation, Outlet, Link, useMatch } from "react-router-dom";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet } from "react-helmet";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { isDarkAtom } from "../atoms";
+import { useRecoilState } from "recoil";
 
 const Container = styled.div`
   padding: 0px 20px;
-  max-width: 480px;
+  width: 480px;
   margin: 0 auto;
 `;
 
@@ -16,23 +20,40 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-bottom: 1vh;
+  padding: 0 5px 1vh 5px;
   margin-bottom: 10px;
+  position: relative;
   div {
     display: flex;
     align-items: center;
   }
   a:last-child {
-    transition: color 0.2s ease-in;
+    transition: color 0.1s ease-in;
     &:hover {
       color: ${(props) => props.theme.accentColor};
     }
   }
 `;
 
-const Title = styled.h1`
-  font-size: 48px;
+const Title = styled.h1<{ length: number }>`
+  font-size: ${(props) => (props.length > 12 ? "30px" : "48px")};
   font-weight: 600;
+  transition: 0.1s ease-in;
+`;
+
+const ModeButton = styled.button`
+  position: absolute;
+  top: 15px;
+  right: 8px;
+  color: ${(props) => props.theme.textColor};
+  background: none;
+  border: none;
+  border-radius: 50%;
+  transition: 0.1s ease-in;
+  &:hover {
+    color: ${(props) => props.theme.accentColor};
+    cursor: pointer;
+  }
 `;
 
 const Loader = styled.span`
@@ -43,7 +64,8 @@ const Loader = styled.span`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.cardColor};
+  transition: 0.1s ease-in;
   padding: 10px 20px;
   border-radius: 10px;
 `;
@@ -62,6 +84,8 @@ const OverviewItem = styled.div`
 
 const Description = styled.p`
   margin: 20px 0px;
+  padding: 0 5px;
+  transition: 0.1s ease-in;
 `;
 
 const Tabs = styled.div`
@@ -76,13 +100,18 @@ const Tab = styled.span<{ isActive: boolean }>`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.cardColor};
   padding: 7px 0px;
   border-radius: 10px;
+  transition: 0.1s ease-in;
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
   a {
+    transition: 0.1s ease-in;
     display: block;
+    &:hover {
+      color: ${(props) => props.theme.accentColor};
+    }
   }
 `;
 
@@ -159,6 +188,8 @@ const Coin = () => {
   const { state } = useLocation() as IRouteState;
   const chartMatch = useMatch("/:coinId/chart");
   const priceMatch = useMatch("/:coinId/price");
+  const [isDark, setIsDark] = useRecoilState(isDarkAtom);
+  const toggleIsDarkAtom = () => setIsDark((current) => !current);
 
   const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
     ["info", coinId!],
@@ -184,18 +215,25 @@ const Coin = () => {
                 <Img
                   src={`https://cryptoicon-api.vercel.app/api/icon/${state?.symbol}`}
                 />
-                <Title>{state?.name}</Title>
+                <Title length={state?.name.length}>{state?.name}</Title>
               </>
             ) : (
               <>
                 <Img
                   src={`https://cryptoicon-api.vercel.app/api/icon/${infoData?.symbol.toLowerCase()}`}
                 />
-                <Title>{infoData?.name}</Title>
+                <Title length={infoData?.name.length!}>{infoData?.name}</Title>
               </>
             )}
           </div>
         </Link>
+        <ModeButton onClick={toggleIsDarkAtom}>
+          {isDark ? (
+            <FontAwesomeIcon icon={faSun} size="lg" />
+          ) : (
+            <FontAwesomeIcon icon={faMoon} size="lg" />
+          )}
+        </ModeButton>
         <Link to={"/"}>Home</Link>
       </Header>
       {loading ? (
