@@ -78,6 +78,7 @@ const Img = styled.img<IImg>`
   width: ${(props) => props.size};
   height: ${(props) => props.size};
   margin-right: 10px;
+  image-rendering: -webkit-optimize-contrast;
 `;
 
 interface ICoin {
@@ -125,7 +126,7 @@ const Coins = () => {
                 }}
               >
                 <Img
-                  src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                  src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
                   size="35px"
                 />
                 {coin.name} &rarr;

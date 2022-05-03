@@ -213,7 +213,7 @@ const Coin = () => {
             {state?.name ? (
               <>
                 <Img
-                  src={`https://cryptoicon-api.vercel.app/api/icon/${state?.symbol}`}
+                  src={`https://cryptocurrencyliveprices.com/img/${coinId}.png`}
                 />
                 <Title length={state?.name.length}>{state?.name}</Title>
               </>
