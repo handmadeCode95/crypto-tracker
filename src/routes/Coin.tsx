@@ -210,20 +210,13 @@ const Coin = () => {
       <Header>
         <Link to={`/${coinId}`}>
           <div>
+            <Img
+              src={`https://cryptocurrencyliveprices.com/img/${coinId}.png`}
+            />
             {state?.name ? (
-              <>
-                <Img
-                  src={`https://cryptocurrencyliveprices.com/img/${coinId}.png`}
-                />
-                <Title length={state?.name.length}>{state?.name}</Title>
-              </>
+              <Title length={state?.name.length}>{state?.name}</Title>
             ) : (
-              <>
-                <Img
-                  src={`https://cryptoicon-api.vercel.app/api/icon/${infoData?.symbol.toLowerCase()}`}
-                />
-                <Title length={infoData?.name.length!}>{infoData?.name}</Title>
-              </>
+              <Title length={infoData?.name.length!}>{infoData?.name}</Title>
             )}
           </div>
         </Link>
