@@ -106,6 +106,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   transition: 0.1s ease-in;
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
+  font-weight: ${(props) => (props.isActive ? "600" : "500")};
   a {
     transition: 0.1s ease-in;
     display: block;
