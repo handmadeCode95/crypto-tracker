@@ -43,16 +43,18 @@ function Chart() {
             {
               data: data?.map((price) => [
                 new Date(price.time_open).getTime(),
-                price.open > 100
-                  ? price.open.toFixed(0)
-                  : price.open.toFixed(6),
-                price.high > 100
-                  ? price.high.toFixed(0)
-                  : price.high.toFixed(6),
-                price.low > 100 ? price.low.toFixed(0) : price.low.toFixed(6),
-                price.close > 100
-                  ? price.close.toFixed(0)
-                  : price.close.toFixed(6),
+                Number(price.open) > 100
+                  ? Number(price.open).toFixed(0)
+                  : Number(price.open).toFixed(6),
+                Number(price.high) > 100
+                  ? Number(price.high).toFixed(0)
+                  : Number(price.high).toFixed(6),
+                Number(price.low) > 100
+                  ? Number(price.low).toFixed(0)
+                  : Number(price.low).toFixed(6),
+                Number(price.close) > 100
+                  ? Number(price.close).toFixed(0)
+                  : Number(price.close).toFixed(6),
               ]),
             },
           ]}

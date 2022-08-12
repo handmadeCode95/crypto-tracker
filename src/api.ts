@@ -13,11 +13,5 @@ export async function fetchCoinTickers(coinId: string) {
 }
 
 export async function fetchCoinHistory(coinId: string) {
-  const endDate = Math.floor(Date.now() / 1000);
-  const startDate = endDate - 60 * 60 * 24 * 30 * 2;
-  return (
-    await fetch(
-      `${BASE_URL}/coins/${coinId}/ohlcv/historical?start=${startDate}&end=${endDate}`
-    )
-  ).json();
+  return (await fetch(`https://ohlcv-api.nomadcoders.workers.dev?coinId=${coinId}`)).json();
 }
